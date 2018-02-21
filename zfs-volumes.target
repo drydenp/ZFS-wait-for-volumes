@@ -1,0 +1,19 @@
+[Unit]
+Description = All ZFS volumes are present
+
+# Ordering:
+#   zfs.target pulls in zfs-volumes.target
+#   zfs-volumes.target pulls in zfs-wait-for-zvol.service
+#   zfs-wait-for-zvol.service requires zfs scan & import
+#   scan & import calls udev-settle
+
+#   zfs-volumes.target is ordered before local-fs-pre.target
+
+# This causes zfs scan & import to be ordered before local-fs-pre.target
+# But zfs-mount is ordered straight after, and will generally complete before
+# local-fs-pre.target is even reached
+
+Before = zfs.target local-fs-pre.target
+
+[Install]
+WantedBy = zfs.target

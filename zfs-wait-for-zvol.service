@@ -1,0 +1,15 @@
+[Unit]
+Description = Wait for ZFS volumes
+DefaultDependencies = no
+Requires = zfs-import-cache.service zfs-import-scan.service
+After = zfs-import-cache.service zfs-import-scan.service
+Before = zfs-volumes.target
+
+[Service]
+Type = oneshot
+RemainAfterExit = true
+ExecStart = /lib/zfs/zfs-wait
+TimeoutStartSec = 20s
+
+[Install]
+RequiredBy = zfs-volumes.target

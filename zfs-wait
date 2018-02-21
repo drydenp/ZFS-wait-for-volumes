@@ -1,0 +1,15 @@
+#!/bin/sh
+
+volumes=$(zfs list -H -t volume | awk '{print $1}')
+
+while [ -n "$volumes" ]; do
+	while read v && [ -n "$v" ]; do
+		[ -e "/dev/zvol/$v" ] && {
+			volumes=$(echo "$volumes" | grep -vFx "$v")
+			echo "Found $v"
+		}
+	done <<- EOF
+	$volumes
+	EOF
+	sleep 0.5s
+done
