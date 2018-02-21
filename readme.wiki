@@ -1,0 +1,7 @@
+= ZFS wait for volumes =
+
+Just a small thing to install a service that will wait for all z-volumes to actually be there ''before'' local-fs-pre is reached.
+
+Ordinarily <tt>zfs-import-scan</tt> and <tt>zfs-import-cache</tt> are only imported by <tt>zfs-mount</tt> and <tt>zfs-mount</tt> is only ordered before <tt>local-fs.target</tt>, but the import does not have any ordering of its own with respect to <tt>local-fs-pre-target</tt>, so there is no guarantee that it has happened before that point.
+
+This thing not only provides a choke point for operating on z-volumes (<tt>zfs-volumes.target</tt>) but also guarantees that the import happens before <tt>local-fs-pre</tt>, because <tt>zfs-volumes.target</tt> is also ordered before <tt>local-fs-pre</tt>.
